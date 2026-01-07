@@ -14,10 +14,7 @@ export const WallpaperCanvas = forwardRef<HTMLCanvasElement, WallpaperCanvasProp
         ref={ref}
         width={width}
         height={height}
-        className={cn(
-          'w-full h-auto rounded-lg shadow-lg ring-1 ring-foreground/10',
-          className
-        )}
+        className={cn('w-full h-auto', className)}
       />
     );
   }
