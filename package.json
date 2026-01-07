@@ -1,0 +1,22 @@
+{
+  "name": "wallpaper-gen",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "bun run --cwd packages/web dev",
+    "dev:web": "bun run --cwd packages/web dev",
+    "build": "bun run build:core && bun run build:cli && bun run build:web",
+    "build:core": "bun run --cwd packages/core build",
+    "build:cli": "bun run --cwd packages/cli build",
+    "build:web": "bun run --cwd packages/web build",
+    "cli": "bun run --cwd packages/cli start",
+    "wallpaper": "bun run packages/cli/src/index.ts"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}

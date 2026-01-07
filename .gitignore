@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+.bun/
+
+# Build outputs
+dist/
+.output/
+.vinxi/
+.nitro/
+
+# Generated files
+*.png
+!public/*.png
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Env files
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test coverage
+coverage/
+
+# Misc
+*.tgz
+.cache/

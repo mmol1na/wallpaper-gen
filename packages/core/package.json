@@ -1,0 +1,25 @@
+{
+  "name": "@wallpaper-gen/core",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "build": "bun build ./src/index.ts --outdir ./dist --target browser",
+    "dev": "bun build ./src/index.ts --outdir ./dist --target browser --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "chroma-js": "^3.1.2"
+  },
+  "devDependencies": {
+    "@types/chroma-js": "^2.4.4",
+    "typescript": "^5.7.2"
+  }
+}

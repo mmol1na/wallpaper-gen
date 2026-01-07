@@ -1,0 +1,26 @@
+{
+  "name": "@wallpaper-gen/cli",
+  "version": "0.0.1",
+  "type": "module",
+  "bin": {
+    "wallpaper": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "bun build ./src/index.ts --outfile ./dist/index.js --target bun",
+    "dev": "bun run ./src/index.ts",
+    "start": "bun run ./src/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "^0.1.69",
+    "@wallpaper-gen/core": "workspace:*",
+    "chalk": "^5.4.1",
+    "commander": "^13.1.0",
+    "ora": "^8.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  }
+}
