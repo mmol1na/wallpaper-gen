@@ -10,15 +10,17 @@ export function generateShapeConfigs(options: GeneratorOptions): WallpaperConfig
     palette,
     shapeCount,
     seed,
-    shapeWidthRange = [0.06, 0.12],
-    shapeHeightRange = [0.5, 0.7],
-    spacing = 0.02,
+    shapeWidthRatio = 0.12,
+    shapeHeightRatio = 0.75,
+    overlapRatio = 0.35,
+    backgroundColor: customBgColor,
   } = options;
 
   const random = createSeededRandom(seed);
 
   let colors: string[];
   let backgroundColor: string;
+  let isGradientMode = false;
 
   if (typeof palette === 'string') {
     const paletteData = getPalette(palette);
@@ -29,38 +31,51 @@ export function generateShapeConfigs(options: GeneratorOptions): WallpaperConfig
     backgroundColor = paletteData.background;
   } else {
     colors = palette;
-    backgroundColor = palette[0] || '#1e1e2e';
+    backgroundColor = customBgColor || '#0a0a0a';
+    isGradientMode = true;
   }
 
-  const shuffledColors = shuffleArray(random, colors);
   const shapes: ShapeConfig[] = [];
 
-  const totalShapeWidth = shapeCount * (shapeWidthRange[0] + shapeWidthRange[1]) / 2;
-  const totalSpacing = (shapeCount - 1) * spacing;
-  const totalWidth = totalShapeWidth + totalSpacing;
+  const shapeWidth = shapeWidthRatio;
+  const shapeHeight = shapeHeightRatio;
+  
+  const effectiveWidth = shapeWidth * (1 - overlapRatio);
+  const totalWidth = shapeWidth + (shapeCount - 1) * effectiveWidth;
   const startX = (1 - totalWidth) / 2;
 
-  let currentX = startX;
+  const y = (1 - shapeHeight) / 2;
+
+  let colorScale: chroma.Scale | null = null;
+  let shuffledColors: string[] = [];
+
+  if (isGradientMode && colors.length >= 2) {
+    colorScale = chroma.scale(colors).mode('lch');
+  } else {
+    shuffledColors = shuffleArray(random, colors);
+  }
 
   for (let i = 0; i < shapeCount; i++) {
-    const shapeWidth = randomRange(random, shapeWidthRange[0], shapeWidthRange[1]);
-    const shapeHeight = randomRange(random, shapeHeightRange[0], shapeHeightRange[1]);
+    let shapeColor: string;
+
+    if (colorScale) {
+      const t = shapeCount > 1 ? i / (shapeCount - 1) : 0.5;
+      shapeColor = colorScale(t).hex();
+    } else {
+      const colorIndex = i % shuffledColors.length;
+      shapeColor = shuffledColors[colorIndex];
+    }
     
-    const colorIndex = i % shuffledColors.length;
-    const color = shuffledColors[colorIndex];
-    
-    const y = (1 - shapeHeight) / 2;
+    const x = startX + i * effectiveWidth;
 
     shapes.push({
       widthRatio: shapeWidth,
       heightRatio: shapeHeight,
-      x: currentX,
+      x: x,
       y: y,
-      color: color,
+      color: shapeColor,
       borderRadius: Math.min(shapeWidth * width, shapeHeight * height) / 2,
     });
-
-    currentX += shapeWidth + spacing;
   }
 
   return {
@@ -87,7 +102,8 @@ export function renderWallpaper(canvas: Canvas, config: WallpaperConfig): void {
   ctx.fillStyle = backgroundColor;
   ctx.fillRect(0, 0, width, height);
 
-  for (const shape of shapes) {
+  for (let i = shapes.length - 1; i >= 0; i--) {
+    const shape = shapes[i];
     const x = shape.x * width;
     const y = shape.y * height;
     const w = shape.widthRatio * width;

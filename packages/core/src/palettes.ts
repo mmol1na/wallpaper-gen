@@ -148,6 +148,13 @@ export const PALETTES: Record<string, PaletteDefinition> = {
     colors: ['#1a1a3e', '#2d2d5a', '#404077', '#535394', '#6666b1', '#7979ce', '#8c8ceb'],
     accent: '#8c8ceb',
   },
+  inkyDark: {
+    name: 'inkyDark',
+    displayName: 'Inky Dark',
+    background: '#0a0a0a',
+    colors: ['#22c55e', '#eab308', '#f97316', '#ef4444', '#06b6d4', '#3b82f6', '#a855f7'],
+    accent: '#22c55e',
+  },
 };
 
 export function getPalette(name: string): PaletteDefinition | undefined {

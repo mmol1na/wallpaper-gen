@@ -41,22 +41,15 @@ export interface WallpaperConfig {
 }
 
 export interface GeneratorOptions {
-  /** Canvas width in pixels */
   width: number;
-  /** Canvas height in pixels */
   height: number;
-  /** Palette name or custom colors */
   palette: string | string[];
-  /** Number of shapes to generate */
   shapeCount: number;
-  /** Random seed for reproducibility */
   seed?: number;
-  /** Shape width range as ratio of canvas (min, max) */
-  shapeWidthRange?: [number, number];
-  /** Shape height range as ratio of canvas (min, max) */
-  shapeHeightRange?: [number, number];
-  /** Spacing between shapes as ratio of shape width */
-  spacing?: number;
+  shapeWidthRatio?: number;
+  shapeHeightRatio?: number;
+  overlapRatio?: number;
+  backgroundColor?: string;
 }
 
 export interface CanvasContext {
