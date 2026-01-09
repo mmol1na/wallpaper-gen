@@ -362,13 +362,16 @@ function SliderControl({
         max={max}
         value={value}
         onChange={(e) => onChange(parseInt(e.target.value))}
-        className="flex-1 h-1 bg-border rounded-md appearance-none cursor-pointer
+        className="flex-1 min-w-0 h-1 bg-border rounded-md appearance-none cursor-pointer
           [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-2 [&::-webkit-slider-thumb]:h-2 
           [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:border-0
           [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:duration-150
-          [&::-webkit-slider-thumb]:hover:scale-125"
+          [&::-webkit-slider-thumb]:hover:scale-125
+          [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-2 [&::-moz-range-thumb]:h-2
+          [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:rounded-none
+          [&::-moz-range-track]:bg-border [&::-moz-range-track]:h-1 [&::-moz-range-track]:rounded-md"
       />
-      <span className="text-xs font-medium text-primary w-10 text-right">
+      <span className="text-xs font-medium text-primary w-10 shrink-0 text-right">
         {value}
         {suffix}
       </span>
