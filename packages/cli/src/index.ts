@@ -1,10 +1,10 @@
 #!/usr/bin/env bun
-import { Command } from 'commander';
-import { createCanvas } from '@napi-rs/canvas';
-import chalk from 'chalk';
-import ora from 'ora';
-import fs from 'fs/promises';
-import path from 'path';
+import { Command } from "commander";
+import { createCanvas } from "@napi-rs/canvas";
+import chalk from "chalk";
+import ora from "ora";
+import fs from "fs/promises";
+import path from "path";
 
 import {
   generateWallpaper,
@@ -16,27 +16,28 @@ import {
   RESOLUTION_PRESETS,
   type GeneratorOptions,
   type ResolutionPreset,
-} from '@wallpaper-gen/core';
+} from "@wallpaper-gen/core";
 
 const program = new Command();
 
-program
-  .name('wallpaper')
-  .description('Generate beautiful geometric wallpapers')
-  .version('0.0.1');
+program.name("wallpaper").description("Generate beautiful geometric wallpapers").version("0.0.1");
 
 program
-  .command('generate')
-  .description('Generate a wallpaper with specified options')
-  .option('-p, --palette <name>', 'palette name', 'catppuccinMocha')
-  .option('-s, --shapes <number>', 'number of shapes', '7')
-  .option('-r, --resolution <preset>', 'resolution preset (hd, fhd, qhd, 4k, ultrawide, mobile)', 'fhd')
-  .option('-w, --width <number>', 'custom width (overrides resolution)')
-  .option('-h, --height <number>', 'custom height (overrides resolution)')
-  .option('-o, --output <path>', 'output file path', './wallpaper.png')
-  .option('--seed <number>', 'random seed for reproducibility')
+  .command("generate")
+  .description("Generate a wallpaper with specified options")
+  .option("-p, --palette <name>", "palette name", "catppuccinMocha")
+  .option("-s, --shapes <number>", "number of shapes", "7")
+  .option(
+    "-r, --resolution <preset>",
+    "resolution preset (hd, fhd, qhd, 4k, ultrawide, mobile)",
+    "fhd",
+  )
+  .option("-w, --width <number>", "custom width (overrides resolution)")
+  .option("-h, --height <number>", "custom height (overrides resolution)")
+  .option("-o, --output <path>", "output file path", "./wallpaper.png")
+  .option("--seed <number>", "random seed for reproducibility")
   .action(async (options) => {
-    const spinner = ora('Generating wallpaper...').start();
+    const spinner = ora("Generating wallpaper...").start();
 
     try {
       let width: number;
@@ -49,7 +50,10 @@ program
         const preset = RESOLUTION_PRESETS[options.resolution as ResolutionPreset];
         if (!preset) {
           spinner.fail(`Unknown resolution preset: ${options.resolution}`);
-          console.log(chalk.yellow('Available presets:'), Object.keys(RESOLUTION_PRESETS).join(', '));
+          console.log(
+            chalk.yellow("Available presets:"),
+            Object.keys(RESOLUTION_PRESETS).join(", "),
+          );
           process.exit(1);
         }
         width = preset.width;
@@ -68,7 +72,7 @@ program
       const config = generateWallpaper(canvas as any, generatorOptions);
 
       const outputPath = path.resolve(options.output);
-      const buffer = canvas.toBuffer('image/png');
+      const buffer = canvas.toBuffer("image/png");
       await fs.writeFile(outputPath, buffer);
 
       spinner.succeed(`Wallpaper saved to ${chalk.green(outputPath)}`);
@@ -79,23 +83,23 @@ program
         console.log(chalk.dim(`  Seed: ${config.seed}`));
       }
     } catch (error) {
-      spinner.fail('Failed to generate wallpaper');
+      spinner.fail("Failed to generate wallpaper");
       console.error(chalk.red(error instanceof Error ? error.message : String(error)));
       process.exit(1);
     }
   });
 
 program
-  .command('random')
-  .description('Generate a wallpaper with random colors')
-  .option('-s, --shapes <number>', 'number of shapes', '7')
-  .option('-r, --resolution <preset>', 'resolution preset', 'fhd')
-  .option('-w, --width <number>', 'custom width')
-  .option('-h, --height <number>', 'custom height')
-  .option('-o, --output <path>', 'output file path', './wallpaper.png')
-  .option('--seed <number>', 'random seed')
+  .command("random")
+  .description("Generate a wallpaper with random colors")
+  .option("-s, --shapes <number>", "number of shapes", "7")
+  .option("-r, --resolution <preset>", "resolution preset", "fhd")
+  .option("-w, --width <number>", "custom width")
+  .option("-h, --height <number>", "custom height")
+  .option("-o, --output <path>", "output file path", "./wallpaper.png")
+  .option("--seed <number>", "random seed")
   .action(async (options) => {
-    const spinner = ora('Generating random wallpaper...').start();
+    const spinner = ora("Generating random wallpaper...").start();
 
     try {
       let width: number;
@@ -130,7 +134,7 @@ program
       generateWallpaper(canvas as any, generatorOptions);
 
       const outputPath = path.resolve(options.output);
-      const buffer = canvas.toBuffer('image/png');
+      const buffer = canvas.toBuffer("image/png");
       await fs.writeFile(outputPath, buffer);
 
       spinner.succeed(`Random wallpaper saved to ${chalk.green(outputPath)}`);
@@ -139,25 +143,28 @@ program
       console.log(chalk.dim(`  Colors:`));
       randomColors.forEach((c, i) => console.log(chalk.hex(c)(`    ${i + 1}. ${c}`)));
     } catch (error) {
-      spinner.fail('Failed to generate wallpaper');
+      spinner.fail("Failed to generate wallpaper");
       console.error(chalk.red(error instanceof Error ? error.message : String(error)));
       process.exit(1);
     }
   });
 
 program
-  .command('palettes')
-  .description('List available color palettes')
+  .command("palettes")
+  .description("List available color palettes")
   .action(() => {
-    console.log(chalk.bold('\nAvailable Palettes:\n'));
-    
+    console.log(chalk.bold("\nAvailable Palettes:\n"));
+
     const palettes = getAllPalettes();
     for (const palette of palettes) {
-      console.log(chalk.hex(palette.colors[0])('●') + ' ' + chalk.bold(palette.displayName) + chalk.dim(` (${palette.name})`));
-      
-      const colorPreview = palette.colors
-        .map(c => chalk.bgHex(c)('  '))
-        .join('');
+      console.log(
+        chalk.hex(palette.colors[0])("●") +
+          " " +
+          chalk.bold(palette.displayName) +
+          chalk.dim(` (${palette.name})`),
+      );
+
+      const colorPreview = palette.colors.map((c) => chalk.bgHex(c)("  ")).join("");
       console.log(`  ${colorPreview}`);
       console.log(chalk.dim(`  Background: ${palette.background}`));
       console.log();
@@ -165,11 +172,11 @@ program
   });
 
 program
-  .command('resolutions')
-  .description('List available resolution presets')
+  .command("resolutions")
+  .description("List available resolution presets")
   .action(() => {
-    console.log(chalk.bold('\nAvailable Resolutions:\n'));
-    
+    console.log(chalk.bold("\nAvailable Resolutions:\n"));
+
     for (const [key, preset] of Object.entries(RESOLUTION_PRESETS)) {
       console.log(`  ${chalk.green(key.padEnd(12))} ${chalk.dim(preset.label)}`);
     }

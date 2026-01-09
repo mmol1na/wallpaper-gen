@@ -1,10 +1,10 @@
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect, useCallback } from "react";
 import {
   generateWallpaper,
   renderWallpaper,
   type WallpaperConfig,
   type GeneratorOptions,
-} from '@wallpaper-gen/core';
+} from "@wallpaper-gen/core";
 
 interface UseWallpaperCanvasProps {
   options: GeneratorOptions;
@@ -36,25 +36,25 @@ export function useWallpaperCanvas({ options, onConfigGenerated }: UseWallpaperC
     regenerate();
   }, [regenerate]);
 
-  const downloadPng = useCallback((filename = 'wallpaper.png') => {
+  const downloadPng = useCallback((filename = "wallpaper.png") => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     canvas.toBlob((blob) => {
       if (!blob) return;
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
       a.download = filename;
       a.click();
       URL.revokeObjectURL(url);
-    }, 'image/png');
+    }, "image/png");
   }, []);
 
   const getDataUrl = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return null;
-    return canvas.toDataURL('image/png');
+    return canvas.toDataURL("image/png");
   }, []);
 
   return {

@@ -63,18 +63,21 @@ export interface CanvasContext {
 export interface Canvas {
   width: number;
   height: number;
-  getContext(type: '2d'): CanvasContext | null;
+  getContext(type: "2d"): CanvasContext | null;
   toDataURL(type?: string, quality?: number): string;
   toBlob?(callback: (blob: Blob | null) => void, type?: string, quality?: number): void;
 }
 
-export type ResolutionPreset = 'hd' | 'fhd' | 'qhd' | '4k' | 'ultrawide' | 'mobile';
+export type ResolutionPreset = "hd" | "fhd" | "qhd" | "4k" | "ultrawide" | "mobile";
 
-export const RESOLUTION_PRESETS: Record<ResolutionPreset, { width: number; height: number; label: string }> = {
-  hd: { width: 1280, height: 720, label: 'HD (1280x720)' },
-  fhd: { width: 1920, height: 1080, label: 'Full HD (1920x1080)' },
-  qhd: { width: 2560, height: 1440, label: 'QHD (2560x1440)' },
-  '4k': { width: 3840, height: 2160, label: '4K (3840x2160)' },
-  ultrawide: { width: 3440, height: 1440, label: 'Ultrawide (3440x1440)' },
-  mobile: { width: 1080, height: 1920, label: 'Mobile (1080x1920)' },
+export const RESOLUTION_PRESETS: Record<
+  ResolutionPreset,
+  { width: number; height: number; label: string }
+> = {
+  hd: { width: 1280, height: 720, label: "HD (1280x720)" },
+  fhd: { width: 1920, height: 1080, label: "Full HD (1920x1080)" },
+  qhd: { width: 2560, height: 1440, label: "QHD (2560x1440)" },
+  "4k": { width: 3840, height: 2160, label: "4K (3840x2160)" },
+  ultrawide: { width: 3440, height: 1440, label: "Ultrawide (3440x1440)" },
+  mobile: { width: 1080, height: 1920, label: "Mobile (1080x1920)" },
 };

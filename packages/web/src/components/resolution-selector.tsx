@@ -1,11 +1,11 @@
-import { RESOLUTION_PRESETS, type ResolutionPreset } from '@wallpaper-gen/core';
+import { RESOLUTION_PRESETS, type ResolutionPreset } from "@wallpaper-gen/core";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 
 interface ResolutionSelectorProps {
   value: ResolutionPreset;

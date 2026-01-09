@@ -1,11 +1,11 @@
 {
   "name": "wallpaper-gen",
-  "private": true,
   "version": "0.0.1",
-  "type": "module",
+  "private": true,
   "workspaces": [
     "packages/*"
   ],
+  "type": "module",
   "scripts": {
     "dev": "bun run --cwd packages/web dev",
     "dev:web": "bun run --cwd packages/web dev",
@@ -17,6 +17,8 @@
     "wallpaper": "bun run packages/cli/src/index.ts"
   },
   "devDependencies": {
+    "oxfmt": "^0.23.0",
+    "oxlint-tsgolint": "^0.11.0",
     "typescript": "^5.7.2"
   }
 }

@@ -1,5 +1,5 @@
-import { Slider as SliderPrimitive } from '@base-ui/react/slider';
-import { cn } from '@/lib/utils';
+import { Slider as SliderPrimitive } from "@base-ui/react/slider";
+import { cn } from "@/lib/utils";
 
 interface SliderProps {
   value: number;
@@ -10,14 +10,7 @@ interface SliderProps {
   className?: string;
 }
 
-export function Slider({
-  value,
-  onChange,
-  min = 0,
-  max = 100,
-  step = 1,
-  className,
-}: SliderProps) {
+export function Slider({ value, onChange, min = 0, max = 100, step = 1, className }: SliderProps) {
   return (
     <SliderPrimitive.Root
       value={value}
@@ -25,7 +18,7 @@ export function Slider({
       min={min}
       max={max}
       step={step}
-      className={cn('relative flex w-full touch-none select-none items-center', className)}
+      className={cn("relative flex w-full touch-none select-none items-center", className)}
     >
       <SliderPrimitive.Control className="relative h-5 w-full flex items-center">
         <SliderPrimitive.Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-muted">

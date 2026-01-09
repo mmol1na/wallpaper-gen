@@ -1,5 +1,6 @@
-import { getAllPalettes, type PaletteDefinition } from '@wallpaper-gen/core';
-import { cn } from '@/lib/utils';
+import { getAllPalettes, type PaletteDefinition } from "@wallpaper-gen/core";
+import { Button } from "./ui/button";
+import { cn } from "@/lib/utils";
 
 interface PaletteSelectorProps {
   value: string;
@@ -11,7 +12,7 @@ export function PaletteSelector({ value, onChange, className }: PaletteSelectorP
   const palettes = getAllPalettes();
 
   return (
-    <div className={cn('grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2', className)}>
+    <div className={cn("grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2", className)}>
       {palettes.map((palette) => (
         <PaletteCard
           key={palette.name}
@@ -32,30 +33,27 @@ interface PaletteCardProps {
 
 function PaletteCard({ palette, selected, onClick }: PaletteCardProps) {
   return (
-    <button
+    <Button
+      variant="ghost"
       onClick={onClick}
       className={cn(
-        'group relative flex flex-col gap-1.5 p-2 rounded-lg transition-all',
-        'ring-1 ring-foreground/10 hover:ring-foreground/20',
-        selected && 'ring-2 ring-primary bg-primary/5'
+        "group relative flex flex-col gap-1.5 p-2 rounded-lg transition-all h-auto",
+        "ring-1 ring-foreground/10 hover:ring-foreground/20 hover:bg-transparent",
+        selected && "ring-2 ring-primary bg-primary/5",
       )}
     >
-      <div className="flex gap-0.5 h-6 rounded overflow-hidden">
+      <div className="flex gap-0.5 h-6 rounded overflow-hidden w-full">
         {palette.colors.slice(0, 7).map((color, i) => (
-          <div
-            key={i}
-            className="flex-1 h-full"
-            style={{ backgroundColor: color }}
-          />
+          <div key={i} className="flex-1 h-full" style={{ backgroundColor: color }} />
         ))}
       </div>
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-1.5 w-full">
         <div
-          className="w-3 h-3 rounded-sm ring-1 ring-foreground/10"
+          className="w-3 h-3 rounded-sm ring-1 ring-foreground/10 shrink-0"
           style={{ backgroundColor: palette.background }}
         />
         <span className="text-[10px] font-medium truncate">{palette.displayName}</span>
       </div>
-    </button>
+    </Button>
   );
 }

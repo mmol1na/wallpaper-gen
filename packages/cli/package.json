@@ -1,10 +1,10 @@
 {
   "name": "@wallpaper-gen/cli",
   "version": "0.0.1",
-  "type": "module",
   "bin": {
     "wallpaper": "./dist/index.js"
   },
+  "type": "module",
   "main": "./dist/index.js",
   "scripts": {
     "build": "bun build ./src/index.ts --outfile ./dist/index.js --target bun",

@@ -1,7 +1,13 @@
-import chroma from 'chroma-js';
-import type { Canvas, CanvasContext, GeneratorOptions, ShapeConfig, WallpaperConfig } from './types';
-import { getPalette, PALETTES } from './palettes';
-import { createSeededRandom, randomRange, shuffleArray } from './random';
+import chroma from "chroma-js";
+import type {
+  Canvas,
+  CanvasContext,
+  GeneratorOptions,
+  ShapeConfig,
+  WallpaperConfig,
+} from "./types";
+import { getPalette, PALETTES } from "./palettes";
+import { createSeededRandom, randomRange, shuffleArray } from "./random";
 
 export function generateShapeConfigs(options: GeneratorOptions): WallpaperConfig {
   const {
@@ -22,16 +28,18 @@ export function generateShapeConfigs(options: GeneratorOptions): WallpaperConfig
   let backgroundColor: string;
   let isGradientMode = false;
 
-  if (typeof palette === 'string') {
+  if (typeof palette === "string") {
     const paletteData = getPalette(palette);
     if (!paletteData) {
-      throw new Error(`Unknown palette: ${palette}. Available: ${Object.keys(PALETTES).join(', ')}`);
+      throw new Error(
+        `Unknown palette: ${palette}. Available: ${Object.keys(PALETTES).join(", ")}`,
+      );
     }
     colors = paletteData.colors;
     backgroundColor = paletteData.background;
   } else {
     colors = palette;
-    backgroundColor = customBgColor || '#0a0a0a';
+    backgroundColor = customBgColor || "#0a0a0a";
     isGradientMode = true;
   }
 
@@ -39,7 +47,7 @@ export function generateShapeConfigs(options: GeneratorOptions): WallpaperConfig
 
   const shapeWidth = shapeWidthRatio;
   const shapeHeight = shapeHeightRatio;
-  
+
   const effectiveWidth = shapeWidth * (1 - overlapRatio);
   const totalWidth = shapeWidth + (shapeCount - 1) * effectiveWidth;
   const startX = (1 - totalWidth) / 2;
@@ -50,7 +58,7 @@ export function generateShapeConfigs(options: GeneratorOptions): WallpaperConfig
   let shuffledColors: string[] = [];
 
   if (isGradientMode && colors.length >= 2) {
-    colorScale = chroma.scale(colors).mode('lch');
+    colorScale = chroma.scale(colors).mode("lch");
   } else {
     shuffledColors = shuffleArray(random, colors);
   }
@@ -65,7 +73,7 @@ export function generateShapeConfigs(options: GeneratorOptions): WallpaperConfig
       const colorIndex = i % shuffledColors.length;
       shapeColor = shuffledColors[colorIndex];
     }
-    
+
     const x = startX + i * effectiveWidth;
 
     shapes.push({
@@ -89,9 +97,9 @@ export function generateShapeConfigs(options: GeneratorOptions): WallpaperConfig
 }
 
 export function renderWallpaper(canvas: Canvas, config: WallpaperConfig): void {
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext("2d");
   if (!ctx) {
-    throw new Error('Could not get 2d context from canvas');
+    throw new Error("Could not get 2d context from canvas");
   }
 
   const { width, height, backgroundColor, shapes } = config;
@@ -126,47 +134,44 @@ export function generateWallpaper(canvas: Canvas, options: GeneratorOptions): Wa
 export function generateRandomPalette(count: number = 7, seed?: number): string[] {
   const random = createSeededRandom(seed);
   const baseHue = random() * 360;
-  
+
   const colors: string[] = [];
   for (let i = 0; i < count; i++) {
-    const hue = (baseHue + (i * 360 / count) + randomRange(random, -20, 20)) % 360;
+    const hue = (baseHue + (i * 360) / count + randomRange(random, -20, 20)) % 360;
     const saturation = randomRange(random, 0.5, 0.9);
     const lightness = randomRange(random, 0.5, 0.7);
-    
+
     colors.push(chroma.hsl(hue, saturation, lightness).hex());
   }
-  
+
   return shuffleArray(random, colors);
 }
 
 export function generateComplementaryPalette(baseColor: string, count: number = 7): string[] {
   const base = chroma(baseColor);
-  const baseHue = base.get('hsl.h') || 0;
-  
+  const baseHue = base.get("hsl.h") || 0;
+
   return chroma
-    .scale([
-      base.set('hsl.h', baseHue),
-      base.set('hsl.h', (baseHue + 180) % 360),
-    ])
-    .mode('lch')
+    .scale([base.set("hsl.h", baseHue), base.set("hsl.h", (baseHue + 180) % 360)])
+    .mode("lch")
     .colors(count);
 }
 
 export function generateAnalogousPalette(baseColor: string, count: number = 7): string[] {
   const base = chroma(baseColor);
-  const baseHue = base.get('hsl.h') || 0;
-  
+  const baseHue = base.get("hsl.h") || 0;
+
   return chroma
     .scale([
-      base.set('hsl.h', (baseHue - 30) % 360),
-      base.set('hsl.h', baseHue),
-      base.set('hsl.h', (baseHue + 30) % 360),
+      base.set("hsl.h", (baseHue - 30) % 360),
+      base.set("hsl.h", baseHue),
+      base.set("hsl.h", (baseHue + 30) % 360),
     ])
-    .mode('lch')
+    .mode("lch")
     .colors(count);
 }
 
 export function getContrastingBackground(colors: string[]): string {
   const avgLuminance = colors.reduce((sum, c) => sum + chroma(c).luminance(), 0) / colors.length;
-  return avgLuminance > 0.5 ? '#1e1e2e' : '#f5f5f5';
+  return avgLuminance > 0.5 ? "#1e1e2e" : "#f5f5f5";
 }

@@ -1,6 +1,6 @@
 export function createSeededRandom(seed?: number): () => number {
   let currentSeed = seed ?? Math.floor(Math.random() * 2147483647);
-  
+
   return () => {
     currentSeed = (currentSeed * 16807) % 2147483647;
     return (currentSeed - 1) / 2147483646;
