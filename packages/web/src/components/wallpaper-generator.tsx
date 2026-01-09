@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   RESOLUTION_PRESETS,
   type ResolutionPreset,
@@ -7,39 +7,13 @@ import {
   getAllPalettes,
 } from "@wallpaper-gen/core";
 import { useWallpaperCanvas } from "@/hooks/use-wallpaper-canvas";
+import { useWallpaperSettings } from "@/hooks/use-wallpaper-settings";
 import { WallpaperCanvas } from "./wallpaper-canvas";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 
-type GeneratorMode = "gradient" | "themes";
-
-interface WallpaperGeneratorState {
-  mode: GeneratorMode;
-  palette: string;
-  customColors: string[];
-  backgroundColor: string;
-  resolution: ResolutionPreset;
-  shapeCount: number;
-  shapeWidth: number;
-  shapeHeight: number;
-  overlap: number;
-  seed?: number;
-}
-
 export function WallpaperGenerator() {
-  const [state, setState] = useState<WallpaperGeneratorState>({
-    mode: "gradient",
-    palette: "catppuccinMocha",
-    customColors: ["#22c55e", "#3b82f6", "#a855f7", "#ef4444", "#eab308"],
-    backgroundColor: "#212121",
-    resolution: "4k",
-    shapeCount: 7,
-    shapeWidth: 12,
-    shapeHeight: 75,
-    overlap: 35,
-    seed: Date.now(),
-  });
-
+  const { state, setState, resetToDefaults } = useWallpaperSettings();
   const [config, setConfig] = useState<WallpaperConfig | null>(null);
 
   const options: GeneratorOptions = useMemo(
@@ -126,6 +100,28 @@ export function WallpaperGenerator() {
       <header className="flex items-center justify-between border-b border-border pb-2 mb-3 shrink-0">
         <div className="flex items-center gap-4">
           <h1 className="text-xs font-medium tracking-wider">wallpaper-gen</h1>
+          <Button
+            variant="hud-ghost"
+            size="hud-sm"
+            onClick={resetToDefaults}
+            title="Reset to defaults"
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+              <path d="M3 3v5h5" />
+            </svg>
+          </Button>
         </div>
         <div className="text-[10px] text-muted-foreground">
           {config && (
