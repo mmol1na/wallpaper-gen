@@ -31,8 +31,8 @@ export function WallpaperGenerator() {
     mode: "gradient",
     palette: "catppuccinMocha",
     customColors: ["#22c55e", "#3b82f6", "#a855f7", "#ef4444", "#eab308"],
-    backgroundColor: "#0a0a0a",
-    resolution: "fhd",
+    backgroundColor: "#212121",
+    resolution: "4k",
     shapeCount: 7,
     shapeWidth: 12,
     shapeHeight: 75,
@@ -125,11 +125,7 @@ export function WallpaperGenerator() {
     <div className="h-screen bg-background p-3 flex flex-col overflow-hidden">
       <header className="flex items-center justify-between border-b border-border pb-2 mb-3 shrink-0">
         <div className="flex items-center gap-4">
-          <h1 className="text-xs font-medium tracking-wider uppercase">WALLPAPER-GEN</h1>
-          <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
-            <StatusIndicator status="nominal" label="SYS" />
-            <StatusIndicator status="nominal" label="RENDER" />
-          </div>
+          <h1 className="text-xs font-medium tracking-wider">wallpaper-gen</h1>
         </div>
         <div className="text-[10px] text-muted-foreground">
           {config && (
@@ -163,12 +159,6 @@ export function WallpaperGenerator() {
             <Button variant="hud-primary" size="hud" onClick={handleDownload} className="flex-1">
               EXPORT <kbd className="ml-1 opacity-50">E</kbd>
             </Button>
-
-            {config && (
-              <div className="px-2 py-1 text-[10px] text-muted-foreground border border-border/50 bg-muted/30">
-                #{String(config.seed || 0).slice(-6)}
-              </div>
-            )}
           </div>
         </div>
 
@@ -418,27 +408,6 @@ function Panel({
       >
         {children}
       </div>
-    </div>
-  );
-}
-
-function StatusIndicator({
-  status,
-  label,
-}: {
-  status: "nominal" | "warning" | "critical";
-  label: string;
-}) {
-  const colors = {
-    nominal: "bg-nominal",
-    warning: "bg-warning",
-    critical: "bg-critical",
-  };
-
-  return (
-    <div className="flex items-center gap-1">
-      <div className={cn("w-1.5 h-1.5 rounded-full animate-pulse", colors[status])} />
-      <span>{label}</span>
     </div>
   );
 }
