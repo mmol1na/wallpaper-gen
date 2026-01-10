@@ -27,6 +27,7 @@
     "@wallpaper-gen/core": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "extract-colors": "^4.2.1",
     "nitro": "latest",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

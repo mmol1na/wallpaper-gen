@@ -8,6 +8,10 @@ import {
 } from "@wallpaper-gen/core";
 import { useWallpaperCanvas } from "@/hooks/use-wallpaper-canvas";
 import { useWallpaperSettings } from "@/hooks/use-wallpaper-settings";
+import {
+  useImageColorExtractor,
+  type ExtractedPalette,
+} from "@/hooks/use-image-color-extractor";
 import { WallpaperCanvas } from "./wallpaper-canvas";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
@@ -15,6 +19,35 @@ import { cn } from "@/lib/utils";
 export function WallpaperGenerator() {
   const { state, setState, resetToDefaults } = useWallpaperSettings();
   const [config, setConfig] = useState<WallpaperConfig | null>(null);
+
+  const handleExtractedColors = useCallback(
+    (palette: ExtractedPalette) => {
+      setState((prev) => ({
+        ...prev,
+        mode: "gradient",
+        customColors: palette.colors,
+        backgroundColor: palette.backgroundColor,
+        seed: Date.now(),
+      }));
+    },
+    [setState]
+  );
+
+  const { isExtracting, error: extractError, openFilePicker, fileInputRef, extractFromFile } =
+    useImageColorExtractor(handleExtractedColors);
+
+  const handleFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        extractFromFile(file);
+      }
+      if (e.target) {
+        e.target.value = "";
+      }
+    },
+    [extractFromFile]
+  );
 
   const options: GeneratorOptions = useMemo(
     () => ({
@@ -227,6 +260,71 @@ export function WallpaperGenerator() {
           {state.mode === "gradient" ? (
             <Panel title="COLORS" className="flex-1 min-h-0 flex flex-col" compact>
               <div className="flex-1 overflow-y-auto space-y-2 pr-1 -mr-1 scrollbar-thin">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+                <Button
+                  variant="hud-dashed"
+                  size="hud"
+                  onClick={openFilePicker}
+                  disabled={isExtracting}
+                  className="w-full mb-2"
+                >
+                  {isExtracting ? (
+                    <span className="flex items-center gap-2">
+                      <svg
+                        className="animate-spin h-3 w-3"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                        />
+                      </svg>
+                      EXTRACTING...
+                    </span>
+                  ) : (
+                    <>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="12"
+                        height="12"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="mr-1.5"
+                      >
+                        <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                        <circle cx="9" cy="9" r="2" />
+                        <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+                      </svg>
+                      EXTRACT FROM IMAGE
+                    </>
+                  )}
+                </Button>
+
+                {extractError && (
+                  <div className="text-[9px] text-red-400 px-1 pb-1">{extractError}</div>
+                )}
+
                 <div className="flex items-center gap-2 pb-2 border-b border-border/50">
                   <span className="text-[9px] text-muted-foreground w-14 shrink-0">BG</span>
                   <input
