@@ -152,36 +152,38 @@ function clearUrlParams(): void {
   }
 }
 
-/**
- * Persists wallpaper settings with priority: URL params > localStorage > defaults.
- * URL params enable shared links, localStorage enables persistence across reloads.
- */
 export function useWallpaperSettings() {
-  const [state, setState] = useState<WallpaperGeneratorState>(() => {
-    if (typeof window === "undefined") {
-      return { ...DEFAULT_STATE, seed: Date.now() };
-    }
+  const [state, setState] = useState<WallpaperGeneratorState>(() => ({
+    ...DEFAULT_STATE,
+    seed: Date.now(),
+  }));
+  const [initialized, setInitialized] = useState(false);
+
+  useEffect(() => {
+    if (initialized) return;
 
     const urlState = parseUrlParams(window.location.search);
     if (urlState) {
       const merged = { ...DEFAULT_STATE, ...urlState };
       if (!merged.seed) merged.seed = Date.now();
       clearUrlParams();
-      return merged;
+      setState(merged);
+      setInitialized(true);
+      return;
     }
 
     const storedState = loadFromStorage();
     if (storedState) {
-      return { ...storedState, seed: Date.now() };
+      setState({ ...storedState, seed: Date.now() });
     }
-
-    return { ...DEFAULT_STATE, seed: Date.now() };
-  });
+    setInitialized(true);
+  }, [initialized]);
 
   useEffect(() => {
+    if (!initialized) return;
     const { seed: _, ...stateWithoutSeed } = state;
     saveToStorage({ ...stateWithoutSeed, seed: undefined });
-  }, [state]);
+  }, [state, initialized]);
 
   const resetToDefaults = useCallback(() => {
     localStorage.removeItem(STORAGE_KEY);

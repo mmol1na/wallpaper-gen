@@ -104,7 +104,23 @@ export function WallpaperGenerator() {
   const handleAddColor = useCallback(() => {
     if (state.customColors.length < 10) {
       const hue = Math.floor(Math.random() * 360);
-      const newColor = `hsl(${hue}, 70%, 50%)`;
+      const h = hue / 360;
+      const s = 0.7;
+      const l = 0.5;
+      const hueToRgb = (p: number, q: number, t: number) => {
+        if (t < 0) t += 1;
+        if (t > 1) t -= 1;
+        if (t < 1 / 6) return p + (q - p) * 6 * t;
+        if (t < 1 / 2) return q;
+        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+        return p;
+      };
+      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      const p = 2 * l - q;
+      const r = Math.round(hueToRgb(p, q, h + 1 / 3) * 255);
+      const g = Math.round(hueToRgb(p, q, h) * 255);
+      const b = Math.round(hueToRgb(p, q, h - 1 / 3) * 255);
+      const newColor = `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
       setState((prev) => ({ ...prev, customColors: [...prev.customColors, newColor] }));
     }
   }, [state.customColors.length]);
