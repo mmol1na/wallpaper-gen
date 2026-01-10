@@ -36,26 +36,32 @@ function processExtractedColors(colors: FinalColor[]): ExtractedPalette {
     .filter((c) => c.saturation > 0.25 && c.lightness > 0.15 && c.lightness < 0.85)
     .sort((a, b) => b.saturation * b.intensity - a.saturation * a.intensity);
 
-  const selectedColors =
-    vibrant.length >= 2
-      ? vibrant.slice(0, Math.min(8, vibrant.length))
-      : colors.slice(0, Math.min(5, colors.length));
-
   const neutralColors = colors
     .filter((c) => c.saturation < 0.3)
-    .sort((a, b) => b.area - a.area);
+    .sort((a, b) => a.lightness - b.lightness);
 
-  let backgroundColor: string;
+  let backgroundHex: string;
   if (neutralColors.length > 0) {
-    backgroundColor = neutralColors[0].hex;
+    backgroundHex = neutralColors[0].hex;
   } else {
     const darkest = [...colors].sort((a, b) => a.lightness - b.lightness)[0];
-    backgroundColor = darkest?.hex || "#212121";
+    backgroundHex = darkest?.hex || "#212121";
   }
 
+  const shapeColors = vibrant
+    .filter((c) => c.hex.toLowerCase() !== backgroundHex.toLowerCase())
+    .slice(0, 8);
+
+  const finalColors =
+    shapeColors.length >= 2
+      ? shapeColors
+      : colors
+          .filter((c) => c.hex.toLowerCase() !== backgroundHex.toLowerCase())
+          .slice(0, 5);
+
   return {
-    colors: selectedColors.map((c) => c.hex),
-    backgroundColor,
+    colors: finalColors.map((c) => c.hex),
+    backgroundColor: backgroundHex,
   };
 }
 
